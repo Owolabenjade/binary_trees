@@ -3,20 +3,17 @@
 
 /**
  * binary_tree_delete - Deletes an entire binary tree.
- * @tree: A pointer to the root node of the tree to delete.
+ * @tree: Pointer to the root node of the tree to delete.
  */
 void binary_tree_delete(binary_tree_t *tree)
 {
-    if (!tree)
+    if (tree == NULL) /* Do nothing if the tree is empty */
         return;
 
-    /* Recursively delete left subtree */
+    /* Recursively delete subtrees*/
     binary_tree_delete(tree->left);
-
-    /* Recursively delete right subtree */
     binary_tree_delete(tree->right);
 
-    /* Delete current node */
-    free(tree);
+    free(tree); /* Free the current node */
 }
 
