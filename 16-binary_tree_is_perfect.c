@@ -2,50 +2,58 @@
 #include <stdlib.h>
 
 /**
- * binary_tree_height - Measures the height of a binary tree
- * @tree: pointer to the root node of the tree to measure the height.
- * Return: The height of the tree. If tree is NULL, height is 0.
+ * binary_tree_depth - Measures the depth of a node in a binary tree.
+ * @tree: Pointer to the node to measure the depth of.
+ *
+ * Return: Depth of the node, or 0 if tree is NULL.
  */
-size_t binary_tree_height(const binary_tree_t *tree)
+size_t binary_tree_depth(const binary_tree_t *tree)
 {
-    if (!tree || (!tree->left && !tree->right))
-        return 0;
-    size_t left_height = binary_tree_height(tree->left);
-    size_t right_height = binary_tree_height(tree->right);
-    return (left_height > right_height ? left_height + 1 : right_height + 1);
+    size_t depth = 0;
+
+    if (tree == NULL) 
+        return (0); 
+
+    while (tree->parent != NULL)
+    {
+        depth++;
+        tree = tree->parent;
+    }
+
+    return (depth);
 }
 
 /**
- * binary_tree_is_full - Checks if a binary tree is full.
- * @tree: A pointer to the root node of the tree to check.
- * Return: 1 if the tree is full, 0 if not.
+ * binary_tree_size - Measures the size of a binary tree.
+ * @tree: Pointer to the root node of the tree to measure.
+ *
+ * Return: Size of the tree, or 0 if tree is NULL.
  */
-int binary_tree_is_full(const binary_tree_t *tree)
+size_t binary_tree_size(const binary_tree_t *tree)
 {
-    if (!tree)
-        return 0;
-    if (!tree->left && !tree->right)
-        return 1;
-    if (tree->left && tree->right)
-        return binary_tree_is_full(tree->left) && binary_tree_is_full(tree->right);
-    return 0;
+    if (tree == NULL) 
+        return (0);
+
+    return (binary_tree_size(tree->left) + binary_tree_size(tree->right) + 1);
 }
 
 /**
  * binary_tree_is_perfect - Checks if a binary tree is perfect.
- * @tree: pointer to the root node of the tree to check.
- * Return: 1 if tree is perfect, 0 if not or if tree is NULL.
+ * @tree: Pointer to the root node of the tree to check.
+ *
+ * Return: 1 if perfect, 0 otherwise (includes if tree is NULL).
  */
 int binary_tree_is_perfect(const binary_tree_t *tree)
 {
-    if (!tree)
-        return 0;
+    int depth, num_nodes;
 
-    size_t left_height = binary_tree_height(tree->left);
-    size_t right_height = binary_tree_height(tree->right);
+    if (tree == NULL) 
+        return (0); 
 
-    if (left_height == right_height && binary_tree_is_full(tree))
-        return 1;
-    return 0;
+    depth = binary_tree_depth(tree);
+    num_nodes = binary_tree_size(tree);
+
+    /* Check if num_nodes is 2^(depth + 1) - 1 */
+    return (num_nodes == (1 << (depth + 1)) - 1); 
 }
 
