@@ -8,7 +8,7 @@
  *
  * Return: Pointer to the newly created node, or NULL on failure.
 */
-bst_t *bst_insert(bst_t **tree, int value)
+binary_tree_t *bst_insert(bst_t **tree, int value)
 {
 	bst_t *new_node, *current;
 
