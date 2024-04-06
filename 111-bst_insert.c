@@ -1,50 +1,54 @@
 #include "binary_trees.h"
+#include <stdlib.h>
 
 /**
  * bst_insert - Inserts a value into a Binary Search Tree.
- * @tree: Double pointer to the root node of the BST where the value is to be inserted.
- * @value: The value to be inserted.
+ * @tree: Double pointer to the root node of the BST.
+ * @value: Value to insert into the tree.
  *
- * Description: Inserts a value into a BST. If the value is already present,
- * it is ignored. If the tree is empty, the created node becomes the root.
- * The function returns a pointer to the created node, or NULL on failure
- * or if the value is already present.
- *
- * Return: Pointer to the created node, or NULL.
- */
+ * Return: Pointer to the newly created node, or NULL on failure.
+*/
 bst_t *bst_insert(bst_t **tree, int value)
 {
-    bst_t *current, *parent = NULL;
+	bst_t *new_node, *current;
 
-    if (tree == NULL)
-        return (NULL);  /* Handle NULL tree pointer */
+	if (tree == NULL) 
+		return (NULL); 
 
-    /* Find the correct location in the tree for the new value */
-    current = *tree;
-    while (current != NULL)
-    {
-        parent = current; /* Track the parent for the new node */
-        if (value < current->n)
-            current = current->left;  /* Go left if value is less */
-        else if (value > current->n)
-            current = current->right; /* Go right if value is more */
-        else
-            return (NULL); /* Value already exists, do nothing */
-    }
+	if (*tree == NULL) /* Empty tree or reached insertion point */
+	{
+		new_node = binary_tree_node(NULL, value);
+		*tree = new_node; /* Update root pointer if needed */
+		return (new_node);
+	}
 
-    /* Create and link the new node */
-    bst_t *new_node = binary_tree_node(parent, value);
-    if (new_node == NULL)
-        return (NULL); /* Memory allocation failed */
-
-    /* If the tree was empty, update the tree root */
-    if (parent == NULL)
-        *tree = new_node;
-    else if (value < parent->n)
-        parent->left = new_node; /* Insert as left child */
-    else
-        parent->right = new_node; /* Insert as right child */
-
-    return (new_node);
+	current = *tree;
+	while (current) 
+	{
+		if (value < current->n) 
+		{
+			if (current->left == NULL) 
+			{
+				new_node = binary_tree_node(current, value);
+				current->left = new_node;
+				return (new_node);
+			} 
+			else
+				current = current->left; 
+		} 
+		else if (value > current->n) 
+		{
+			if (current->right == NULL)
+			{
+				new_node = binary_tree_node(current, value);
+				current->right = new_node;
+				return (new_node);
+			}
+		   else
+				current = current->right;
+		}
+		else  /* Duplicate value */
+			return (NULL);
+	}
+	return (NULL); /* Shouldn't reach here */
 }
-
