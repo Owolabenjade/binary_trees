@@ -1,5 +1,5 @@
 #include "binary_trees.h"
-#include <stdlib.h>
+#include <limits.h>
 
 /**
  * is_bst_helper - Helper function to recursively check BST properties
@@ -34,3 +34,4 @@ int binary_tree_is_bst(const binary_tree_t *tree)
 
 	return (is_bst_helper(tree, INT_MIN, INT_MAX));
 }
+
