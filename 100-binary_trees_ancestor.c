@@ -1,3 +1,7 @@
+
+
+.c file
+
 #include "binary_trees.h"
 #include <stdlib.h>
 
@@ -10,7 +14,7 @@
  */
 binary_tree_t *binary_trees_ancestor(const binary_tree_t *first, const binary_tree_t *second)
 {
-    const binary_tree_t *tmp;
+    const binary_tree_t *tmp, *tmp2;
 
     if (first == NULL || second == NULL)
         return (NULL);
@@ -18,7 +22,7 @@ binary_tree_t *binary_trees_ancestor(const binary_tree_t *first, const binary_tr
     for (tmp = first; tmp; tmp = tmp->parent)
     {
         /* Traverse upwards from 'first' */ 
-        for (const binary_tree_t *tmp2 = second; tmp2; tmp2 = tmp2->parent)
+        for (tmp2 = second; tmp2; tmp2 = tmp2->parent)
         {
             /* Traverse upwards from 'second' */
             if (tmp == tmp2) /* Common ancestor found */
