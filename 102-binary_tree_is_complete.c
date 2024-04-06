@@ -2,68 +2,66 @@
 #include <stdlib.h>
 
 /**
- * binary_tree_is_complete - checks if a binary tree is complete
- * @tree: pointer to the root node of the tree to check
- * Return: 1 if complete, 0 if not or if tree is NULL
+ * Structure for a queue node
+ */
+typedef struct queue_node {
+     binary_tree_t *node;
+     struct queue_node *next;
+} queue_t;
+
+/* ... enqueue, dequeue functions from previous example ... */ 
+
+/**
+ * binary_tree_height - Measures the height of a binary tree.
+ * @tree: Pointer to the root node of the tree to measure.
+ *
+ * Return: Height of the tree, or 0 if tree is NULL.
+ */
+size_t binary_tree_height(const binary_tree_t *tree)
+{
+    if (tree == NULL) 
+        return (0); 
+
+    return (1 +  max(binary_tree_height(tree->left), binary_tree_height(tree->right)));
+}
+
+/**
+ * binary_tree_is_complete - Checks if a binary tree is complete.
+ * @tree: Pointer to the root node of the tree to check.
+ *
+ * Return: 1 if complete, 0 otherwise (includes if tree is NULL).
  */
 int binary_tree_is_complete(const binary_tree_t *tree)
 {
-    const binary_tree_t **queue;
-    int front = 0, back = 0, non_full_node = 0, size = 1024;
+    queue_t *head = NULL, *tail = NULL;
+    int idx = 0, num_nodes = 0; 
 
-    if (!tree)
-        return (0);
+    if (tree == NULL) 
+        return (0); 
 
-    queue = malloc(sizeof(*queue) * size);
-    if (!queue)
-        return (0);
+    enqueue(&head, &tail, tree);
 
-    queue[back++] = tree;
-
-    while (front < back)
+    while (head != NULL)
     {
-        const binary_tree_t *current = queue[front++];
+        binary_tree_t *curr_node = dequeue(&head, &tail);
+        num_nodes++;
 
-        if (!current->left)
-            non_full_node = 1;
-        else
-        {
-            if (non_full_node)
-            {
-                free(queue);
-                return (0);
-            }
-            if (back >= size)
-            {
-                size *= 2;
-                queue = realloc(queue, sizeof(*queue) * size);
-                if (!queue)
-                    return (0); // Memory allocation error
-            }
-            queue[back++] = current->left;
-        }
+        /* If encountered a node with a missing child */
+        if (idx != (2 * idx + 1) || idx != (2 * idx + 2)) 
+           return (0); 
 
-        if (!current->right)
-            non_full_node = 1;
-        else
-        {
-            if (non_full_node)
-            {
-                free(queue);
-                return (0);
-            }
-            if (back >= size)
-            {
-                size *= 2;
-                queue = realloc(queue, sizeof(*queue) * size);
-                if (!queue)
-                    return (0); // Memory allocation error
-            }
-            queue[back++] = current->right;
-        }
+        /* Enqueue children */
+        if (curr_node->left)
+            enqueue(&head, &tail, curr_node->left);
+        if (curr_node->right)
+            enqueue(&head, &tail, curr_node->right);
+
+        idx++;
     }
+    
+    /* Check if the total number of nodes should be 2^h - 1 for a complete tree.
+       You might need to use a helper function to calculate height */
 
-    free(queue);
-    return (1);
+    return (num_nodes == (1 << binary_tree_height(tree)) - 1);
 }
 
